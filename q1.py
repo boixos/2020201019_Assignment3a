@@ -8,21 +8,12 @@ json_file = open('org.json')
 file_element = json.load(json_file)
 #print(file_element) 
 
-
-def pOut(hd, child1, child2):
-    print("level of leader is " + str(hd) + " above Employee " + str(child1))
-    print("level of leader is 1 from " + str(child2))
-
-
 def pOut1(l1, child):
     print("level of leader is " + str(l1) + " above Employee " + str(child))
 
 
 def Find_Leader(x, y, root):
-    child1 = x
-    child2 = y
-    height1 = int(FindLevel[x])
-    height2 = int(FindLevel[y])
+
     if int(FindLevel[x]) > int(FindLevel[y]):
         t = x
         x = y
@@ -34,51 +25,15 @@ def Find_Leader(x, y, root):
         d = d-1
     if x == y:
         if parent[x] != root:
-           print(parent[x] + " is Common leader of Employees " +
-                 child1+" And " + child2)
+           return parent[x]
         else:
-           print(root + " is Common leader of Employees "+child1+" And " + child2)
-           if (height1 > height2):
-               hd = height1 - height2+1
-               pOut(hd, child1, child2)
-               return
-           else:
-               hd = height2 - height1+1
-               pOut(hd, child2, child1)
-               return
-        if(height1 > height2):
-           height3 = int(FindLevel[parent[x]])
-           hd = height1-height3
-           pOut(hd, child1, child2)
-
-        else:
-            height3 = int(FindLevel[parent[x]])
-            hd = height2 - height3
-            pOut(hd, child2, child1)
-
-        return
+           return root 
+           
     while parent[x] != parent[y]:
         x = parent[x]
         y = parent[y]
-    print(parent[x] + " is Common leader of Employees " +
-          child1+" And " + child2)
-    if(parent[x] == root):
-        height3 = 0
-        l1 = height1 - height3
-        pOut1(l1, child1)
-
-        l1 = height2 - height3
-        pOut1(l1, child2)
-
-        return
-
-    height3 = int(FindLevel[parent[x]])
-    l1 = height1-height3
-    pOut1(l1, child1)
-
-    l1 = height2-height3
-    pOut1(l1, child2)
-
+    return parent[x]
+    
 parent = {}
 FindLevel = {}
 
@@ -87,7 +42,7 @@ FindLevel = {}
 root = file_element['L0'][0]['name']
 
 ##print(type(root))
-
+FindLevel[root] = 0
 for l in file_element:
     j = 0
     for l1 in file_element[l]:
@@ -97,27 +52,80 @@ for l in file_element:
             parent[name1] = file_element[l][j]['parent']
             FindLevel[name1] = l[1]
             j = j+1
+print(parent)
+print(FindLevel)
 
-
-x = input("Enter emp ids: ").split(' ')
+x = input("Enter Number of Employees and emp ids: ").split(' ')
 # y=input("Enter emp id 2: ")
-if x[0] == root or x[1] == root:
-    print("Leader not found")
-    exit(0)
-if x[0] in parent:
-    ans = True
-else:
-    ans = False
-if x[1] in parent:
-    ans1 = True
-else:
-    ans1 = False
-
-
-if ans1 == True and ans == True:
-    if x[0] == root or x[1] == root:
-        print("Leader not found")
+NumberOfEmp = int(x.pop(0))
+x.sort()
+ans = NumberOfEmp*[0]
+for t in x:
+    if t == root:
+      print("Leader not found")
+      exit(0)
+for i in range(NumberOfEmp):
+    if x[i] in parent:
+       # print(i)
+        ans[i] = True
+       # print(ans[i])
     else:
-        Find_Leader(x[0], x[1], root)
-else:
-    print("Wrong emp id (or emp id not found)")
+        ans[i] = False
+        print("Wrong emp id (or emp id not found)")
+        exit(0)
+
+if NumberOfEmp == 3:
+    temp = Find_Leader(x[0],x[1],root)
+    t2 = Find_Leader(temp,x[2],root)
+    print(t2+ " is Common leader of Employees " + "Employee "+x[0]+", Employee "+x[1]+" And Employee "+x[2])
+    h = int(FindLevel[t2])
+    h1 = int(FindLevel[x[0]])
+    h2 = int(FindLevel[x[1]])
+    h3 = int(FindLevel[x[2]])
+    pOut1(abs(h-h1),x[0])
+    pOut1(abs(h-h2),x[1])
+    pOut1(abs(h-h3),x[2])
+if NumberOfEmp == 4:
+    temp = Find_Leader(x[0],x[1],root)
+    t2 = Find_Leader(temp,x[2],root)
+    if t2 == root:
+       print(t2+ " is Common leader of " + "Employee "+x[0]+", Employee "+x[1]+", Employee "+x[2]+" And Employee "+x[3])
+       h = int(FindLevel[t2])
+    else:
+        t3 = Find_Leader(t2,x[3],root)
+        print(t3+ " is Common leader of " + "Employee "+x[0]+", Employee "+x[1]+", Employee "+x[2]+" And Employee "+x[3])
+        h = int(FindLevel[t3])
+    
+    h1 = int(FindLevel[x[0]])
+    h2 = int(FindLevel[x[1]])
+    h3 = int(FindLevel[x[2]])
+    h3 = int(FindLevel[x[3]])
+    pOut1(abs(h-h1),x[0])
+    pOut1(abs(h-h2),x[1])
+    pOut1(abs(h-h3),x[2]) 
+    pOut1(abs(h-h3),x[3])    
+if NumberOfEmp == 5:
+    temp = Find_Leader(x[0],x[1],root)
+    t2 = Find_Leader(temp,x[2],root)
+    if t2 == root:
+       print(t2+ " is Common leader of " + "Employee "+x[0]+" Employee "+x[1]+" Employee "+x[2]+" Employee "+x[3]+" And Employee "+x[4])
+       h = FindLevel[t2]
+    else:
+        t3 = Find_Leader(t2,x[3],root)
+        if t3 == root:
+            h = FindLevel[t2]
+            print(t3+ " is Common leader of " + "Employee "+x[0]+", Employee "+x[1]+", Employee "+x[2]+", Employee "+x[3]+" And Employee "+x[4])
+        else: 
+            h = FindLevel[t2]
+            t4 = Find_Leader(t3,x[4],root)
+            print(t4+ " is Common leader of " + "Employee "+x[0]+", Employee "+x[1]+", Employee "+x[2]+", Employee "+x[3]+" And Employee "+x[4])
+    h1 = int(FindLevel[x[0]])
+    h2 = int(FindLevel[x[1]])
+    h3 = int(FindLevel[x[2]])
+    h3 = int(FindLevel[x[3]])
+    h4 = int(FindLevel[x[4]])
+    pOut1(abs(h-h1),x[0])
+    pOut1(abs(h-h2),x[1])
+    pOut1(abs(h-h3),x[2]) 
+    pOut1(abs(h-h3),x[3])         
+    pOut1(abs(h-h4),x[4]) 

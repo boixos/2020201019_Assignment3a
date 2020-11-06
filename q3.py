@@ -59,7 +59,7 @@ for i in range(l):
         while start < end:
             FreeSlots[i][start] = 1
             start += 1
-print(AvailableSlots)
+#print(AvailableSlots)
 #print(FreeSlots)
 AndSlots = []
 if l == 2:
@@ -99,7 +99,7 @@ if not BlockedSlot:
     output.write('No Slot Available')
     output.close()
     exit()
-print(BlockedSlot)
+#print(BlockedSlot)
 output.write("Available Slot(s) \n")
 for i in range(l):
     output.write(str(ename[i])+': '+str(AvailableSlots[i]))
