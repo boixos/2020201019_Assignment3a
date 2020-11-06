@@ -1,5 +1,6 @@
 import re
 import string
+import sys
 
 
 class Date:
@@ -75,7 +76,12 @@ def isLeapYear(year):
     else:
         return True
 
+inputDateFormat = sys.argv
+DateFormat = str(inputDateFormat[1]).lower()
+print(DateFormat)
 
+DateFormat = re.split('/| |-|\.', DateFormat)
+print(DateFormat[0])
 f = open("date_calculator.txt", 'r')
 date = f.read()
 date = date.split('\n')
@@ -88,16 +94,22 @@ date1 = date1[1:]
 date2 = date2[1:]
 # print(date1)
 # print(date2)
-date1 = re.split('/| |-', date1)
-date2 = re.split('/| |-', date2)
+date1 = re.split('/| |-|\.', date1)
+date2 = re.split('/| |-|\.', date2)
+
+if DateFormat[0] == 'mm':
+    t1 = date1[0]
+    t2 = date2[0]
+
+    date1[0] = date1[1]
+    date2[0] = date2[1]
+
+    date1[1] = t1
+    date2[1] = t2
+
 date1[0] = date1[0].rstrip('th')
 date2[0] = date2[0].rstrip('th')
 
-# date1 = date1.split('-')
-# date2 = date2.split('-')
-# print(date1[1])
-# print(date2[1])
-#print(type(date1[1]))
 try:
     val = int(date1[1])
 except ValueError:
@@ -106,6 +118,7 @@ try:
     val = int(date2[1])
 except ValueError:
     date2[1] = month_string_to_number(date2[1])
+  
 dt1 = Date(int(date1[0]), int(date1[1]), int(date1[2]))
 dt2 = Date(int(date2[0]), int(date2[1]), int(date2[2]))
 if date1[2] > date2[2]:
@@ -125,9 +138,7 @@ elif date1[2] == date2[2]:
 x = daysBetweenDates(dt1.y, dt1.m, dt1.d, dt2.y, dt2.m, dt2.d)
 if x < 0:
     x = -1 * x
-    # x = x + 1
-# elif x > 0:
-#    # x = x-1
+
 
 print(x, "Day(s)")
 of = open("output.txt", "w")
