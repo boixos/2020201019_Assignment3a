@@ -5,22 +5,10 @@ timeToIndex = {'9:00AM': 0, '9:30AM': 1, '10:00AM': 2, '10:30AM': 3, '11:00AM': 
 indexToTime = {0: '9:00AM', 1: '9:30AM', 2: '10:00AM', 3: '10:30AM', 4: '11:00AM', 5: '11:30AM', 6: '12:00PM', 7: '12:30PM',
     8: '1:00PM', 9: '1:30PM', 10: '2:00PM', 11: '2:30PM', 12: '3:00PM', 13: '3:30PM', 14: '4:00PM', 15: '4:30PM', 16: '5:00PM'}
 
-entries = os.listdir('inputfiles/')
-for entry in entries:
-    print(entry)
-ename = []
-Eslots = []
-BusySlots = []
-StartTimes = []
-EndTimes = []
-AvailableSlots = []
-FreeSlots = []
-stemp = []
-etemp = []
-
-l = len(entries)
-for i in range(l):
-    entries[i] = open(entries[i], "r")
+def initFunc(ename,Eslots,BusySlots,StartTimes,EndTimes,AvailableSlots,FreeSlots,stemp,etemp):
+ l = len(entries)
+ for i in range(l):
+    entries[i] = open('inputfiles/'+entries[i], "r")
     entries[i] = eval(entries[i].read())
     #print(type(entries[i]))
     ename.append(list(entries[i].keys())[0])
@@ -39,9 +27,10 @@ for i in range(l):
     EndTimes.append(etemp.copy())
     stemp.clear()
     etemp.clear()
-#print(StartTimes)
-#print(EndTimes)
-for i in range(l):
+ return sdate
+
+def FindAvlSlots(StartTimes,EndTimes,l):
+ for i in range(l):
     l1 = len(StartTimes[i])
     for j in range(l1):
         if ((StartTimes[i][j] == '9:00AM') or (EndTimes[i][j] == '5:00PM') or (StartTimes[i][j] == EndTimes[i][j])):
@@ -59,7 +48,43 @@ for i in range(l):
         while start < end:
             FreeSlots[i][start] = 1
             start += 1
-#print(AvailableSlots)
+
+def FinFunc(SlotDuration,AndSlots,BlockedSlot):
+ n = len(AndSlots)
+ for i in range(n-1):
+    if AndSlots[i] == 1:
+        count = 0
+        start = indexToTime[i]
+        while AndSlots[i] == 1 and i < n-1:
+            count += 1
+            if count == SlotDuration:
+                end = indexToTime[i+1]
+                BlockedSlot.append(start + ' - ' + end)
+                break
+            i += 1
+        if len(BlockedSlot) == 1:
+            break
+
+
+entries = os.listdir('inputfiles/')
+for entry in entries:
+    print(entry)
+ename = []
+Eslots = []
+BusySlots = []
+StartTimes = []
+EndTimes = []
+AvailableSlots = []
+FreeSlots = []
+stemp = []
+etemp = []
+
+sdate = initFunc(ename,Eslots,BusySlots,StartTimes,EndTimes,AvailableSlots,FreeSlots,stemp,etemp)
+l = len(entries)
+
+FindAvlSlots(StartTimes,EndTimes,l)
+
+print(AvailableSlots)
 #print(FreeSlots)
 AndSlots = []
 if l == 2:
@@ -78,28 +103,14 @@ elif l == 5:
 SlotDuration = float(input())
 SlotDuration = 2*SlotDuration
 BlockedSlot = []
-n = len(AndSlots)
-for i in range(n-1):
-    if AndSlots[i] == 1:
-        count = 0
-        start = indexToTime[i]
-        while AndSlots[i] == 1 and i < n-1:
-            count += 1
-            if count == SlotDuration:
-                end = indexToTime[i+1]
-                BlockedSlot.append(start + ' - ' + end)
-                break
-            i += 1
-        if len(BlockedSlot) == 1:
-            break
-
+FinFunc(SlotDuration,AndSlots,BlockedSlot)
 
 output = open("output.txt", "w")
 if not BlockedSlot:
     output.write('No Slot Available')
     output.close()
     exit()
-#print(BlockedSlot)
+print(BlockedSlot)
 output.write("Available Slot(s) \n")
 for i in range(l):
     output.write(str(ename[i])+': '+str(AvailableSlots[i]))
