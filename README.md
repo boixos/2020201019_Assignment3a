@@ -1,6 +1,5 @@
 # 2020201019_Assignment3a
-SSD assignment3a
-# LAB Activity 5
+# SSD assignment3a
   I've used VScode for all the question created .py file for each questions. All codes were working fine. Please Check if something doesn't work.
 
 ## Question 1
