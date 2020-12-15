@@ -1,6 +1,9 @@
 # 2020201019_Assignment3a
 # SSD assignment3a
   I've used VScode for all the question created .py file for each questions. All codes were working fine. Please Check if something doesn't work.
+Repo link PartA: https://github.com/boixos/2020201019_Assignment3a/tree/main
+Repo link PartB: https://github.com/boixos/2020201019_Assignment3a/tree/PartB
+Repo link PartC: https://github.com/boixos/2020201019_Assignment3a/tree/PartC
 
 ## Question 1
   Make sure to provide `org.json` file as input in same folder as program.
